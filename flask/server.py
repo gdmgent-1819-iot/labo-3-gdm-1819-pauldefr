@@ -18,6 +18,15 @@ app = Flask(__name__)
 # Create an instance of the sensehat
 sense = SenseHat()
 
+# Push colors to sensehat
+def setColor(color_data):
+    if color_data['state'] == 'on':
+        color = color_data['value'].lstrip('#')
+        rgb = tuple(int(color[i:i+2], 16) for i in (0, 2, 4))
+        for x in range(0,8):
+            sense.set_pixel(x,y, rgb)
+    else:
+
 # Define the root route
 @app.route('/')
 def index():
