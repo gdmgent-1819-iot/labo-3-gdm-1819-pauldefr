@@ -1,7 +1,7 @@
 '''
 Sensehat Dashboard
 --------------------
-Author: drdynscript
+Author: PaulienDF
 Modified: 03-12-2019
 --------------------
 Installation:
@@ -26,6 +26,9 @@ def setColor(color_data):
         for x in range(0,8):
             sense.set_pixel(x,y, rgb)
     else:
+        for x in range(0,8):
+			for y in range(0,8):
+				sense.set_pixel(x, y, [0, 0, 0])
 
 # Define the root route
 @app.route('/')
@@ -62,6 +65,29 @@ def api_environment():
     }
   }
   return jsonify(environment_obj), 200
+
+@app.route('/ambilight', methods=['GET', 'POST'])
+def ambilight():
+	if request.method == 'POST':
+		print('POST')
+		data = request.form
+		print(data)
+		color_val = data['color']
+		print(color_val)
+		if 'on_off' in data and data['on_off'] == 'on':
+			state = 'on'
+		else:
+			state = 'off'
+	else:
+		color_val = '#ffffff'
+		state = 'off'
+
+	color_data = {
+		'value': color_val,
+		'state': state,
+	}
+	setColor(color_data)
+	return render_template('ambilight.html', color=color_data)
 
 # Define the api_environment route
 @app.route('/environment', methods=['GET'])
